@@ -19,6 +19,7 @@ public class mymath {
 	}
 	
 	public int[] indexSort(float[] list) {
+		// 冒泡排序方式对按元素大小输出下标
 		int[] index = new int[list.length];
 		for(int k=0;k<list.length;k++) {
 			index[k] = k;
@@ -45,4 +46,24 @@ public class mymath {
 		return index;
 	}
 	
+	public int[] noismember(int[] a, int[] b) {
+	// a中除去b中元素的下标
+		int[] c = new int[a.length-b.length];
+		int r = 0;
+		for (int i=0;i<a.length;i++) {
+			boolean flag = true;
+			for (int j=0;j<b.length;j++) {
+				if (a[i]==b[j]){
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				c[r]=i;
+				r++;
+			}
+			
+		}
+		return c;
+	}
 }

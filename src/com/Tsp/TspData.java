@@ -1,8 +1,8 @@
 package com.Tsp;
 
 public class TspData {
-	int citysNum;
-	float[][] disMap;
+	public int citysNum;
+	public float[][] disMap;
 	{ 
 		int[][] citys={
         {1304,        2312},{3639,        1315},         
@@ -35,6 +35,25 @@ public class TspData {
 				}
 			}
 		}
+	}
+	public float calDistance(int[] x) {
+		// 解码计算个体目标函数值
+		float dis = 0.0f;
+		for(int i=0;i<citysNum-1;i++) {
+			dis += disMap[x[i]][x[i+1]];
+		}
+		dis += disMap[x[0]][x[citysNum-1]];
+		return dis;
+	}
+	
+	public float[] decodePop(int[][] pop) {
+		// 解码计算种群目标函数值
+		int popsize = pop.length;
+		float[] values = new float[popsize];
+		for(int i=0;i<popsize;i++) {
+			values[i] = calDistance(pop[i].clone());
+		}
+		return values;
 	}
 
 }
