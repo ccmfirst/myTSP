@@ -24,7 +24,9 @@ public class TspData {
 	
 		citysNum = citys.length;
 		disMap = new float[citysNum][citysNum];	
+		
 		for(int i = 0;i<citysNum;i++) {
+			
 			for(int j=0;j<i;j++) {
 				if(i!=j) {
 					float dis = (float)Math.sqrt(Math.pow((citys[i][0]-citys[j][0]), 2)+Math.pow((citys[i][1]-citys[j][1]), 2));
@@ -34,14 +36,19 @@ public class TspData {
 					disMap[i][j] = 0.0f;
 				}
 			}
+			
 		}
+		
 	}
+	
 	public float calDistance(int[] x) {
 		// 解码计算个体目标函数值
 		float dis = 0.0f;
+		
 		for(int i=0;i<citysNum-1;i++) {
 			dis += disMap[x[i]][x[i+1]];
 		}
+		
 		dis += disMap[x[0]][x[citysNum-1]];
 		return dis;
 	}
@@ -50,9 +57,11 @@ public class TspData {
 		// 解码计算种群目标函数值
 		int popsize = pop.length;
 		float[] values = new float[popsize];
+		
 		for(int i=0;i<popsize;i++) {
 			values[i] = calDistance(pop[i].clone());
 		}
+		
 		return values;
 	}
 
