@@ -3,65 +3,55 @@ package com.Tsp;
 public class TspData {
 	public int citysNum;
 	public float[][] disMap;
-	{ 
-		int[][] citys={
-        {1304,        2312},{3639,        1315},         
-        {4177,        2244},{3712,        1399},            
-        {3488,        1535},{3326,        1556},         
-        {3238,        1229},{4196,        1004},         
-        {4312,         790},{4386,         570},
-        {3007,        1970},{2562,        1756},
-        {2788,        1491},{2381,        1676},
-        {1332,         695},{3715,        1678},
-        {3918,        2179},{4061,        2370},
-        {3780,        2212},{3676,        2578},
-        {4029,        2838},{4263,        2931},
-        {3429,        1908},{3507,        2367},
-        {3394,        2643},{3439,        3201},
-        {2935,        3240},{3140,        3550},
-        {2545,        2357},{2778,        2826},
-        {2370,        2975}};//31¸ö³ÇÊÐ£¨×îÓÅ½â:14700£©
-	
+	{
+		int[][] citys = { { 1304, 2312 }, { 3639, 1315 }, { 4177, 2244 }, { 3712, 1399 }, { 3488, 1535 },
+				{ 3326, 1556 }, { 3238, 1229 }, { 4196, 1004 }, { 4312, 790 }, { 4386, 570 }, { 3007, 1970 },
+				{ 2562, 1756 }, { 2788, 1491 }, { 2381, 1676 }, { 1332, 695 }, { 3715, 1678 }, { 3918, 2179 },
+				{ 4061, 2370 }, { 3780, 2212 }, { 3676, 2578 }, { 4029, 2838 }, { 4263, 2931 }, { 3429, 1908 },
+				{ 3507, 2367 }, { 3394, 2643 }, { 3439, 3201 }, { 2935, 3240 }, { 3140, 3550 }, { 2545, 2357 },
+				{ 2778, 2826 }, { 2370, 2975 } };// 31ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½Å½ï¿½:14700ï¿½ï¿½
+
 		citysNum = citys.length;
-		disMap = new float[citysNum][citysNum];	
-		
-		for(int i = 0;i<citysNum;i++) {
-			
-			for(int j=0;j<i;j++) {
-				if(i!=j) {
-					float dis = (float)Math.sqrt(Math.pow((citys[i][0]-citys[j][0]), 2)+Math.pow((citys[i][1]-citys[j][1]), 2));
+		disMap = new float[citysNum][citysNum];
+
+		for (int i = 0; i < citysNum; i++) {
+
+			for (int j = 0; j < i; j++) {
+				if (i != j) {
+					float dis = (float) Math
+							.sqrt(Math.pow((citys[i][0] - citys[j][0]), 2) + Math.pow((citys[i][1] - citys[j][1]), 2));
 					disMap[i][j] = dis;
 					disMap[j][i] = dis;
-				}else {
+				} else {
 					disMap[i][j] = 0.0f;
 				}
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	public float calDistance(int[] x) {
-		// ½âÂë¼ÆËã¸öÌåÄ¿±êº¯ÊýÖµ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½êº¯ï¿½ï¿½Öµ
 		float dis = 0.0f;
-		
-		for(int i=0;i<citysNum-1;i++) {
-			dis += disMap[x[i]][x[i+1]];
+
+		for (int i = 0; i < citysNum - 1; i++) {
+			dis += disMap[x[i]][x[i + 1]];
 		}
-		
-		dis += disMap[x[0]][x[citysNum-1]];
+
+		dis += disMap[x[0]][x[citysNum - 1]];
 		return dis;
 	}
-	
+
 	public float[] decodePop(int[][] pop) {
-		// ½âÂë¼ÆËãÖÖÈºÄ¿±êº¯ÊýÖµ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÈºÄ¿ï¿½êº¯ï¿½ï¿½Öµ
 		int popsize = pop.length;
 		float[] values = new float[popsize];
-		
-		for(int i=0;i<popsize;i++) {
+
+		for (int i = 0; i < popsize; i++) {
 			values[i] = calDistance(pop[i].clone());
 		}
-		
+
 		return values;
 	}
 

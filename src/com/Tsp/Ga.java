@@ -1,186 +1,188 @@
 package com.Tsp;
+
 import java.util.Random;
 import java.util.Arrays;
 import com.myfun.mymath;
-public class Ga extends TspData{
-	
-	final int popsize = 100;		// ÖÖÈº´óÐ¡
-	final int maxGen = 1000;		// ×î´óµü´ú´ÎÊý
-	final float pc = 0.9f;			// ½»²æ¸ÅÂÊ
-	final float pm = 0.2f;			// ±äÒì¸ÅÂÊ
-	final float gapp = 0.8f;		// Ñ¡ÔñÒò×Ó
-	int[][] pop=new int[popsize][citysNum];					// ÖÖÈº
-	float[] values = new float[popsize];		// ÖÖÈºÄ¿±êº¯ÊýÖµ£¨ÕâÀïÖ¸Â·Ïß¾àÀë£©
-	mymath mathFun = new mymath();				
+
+public class Ga extends TspData {
+
+	final int popsize = 100; // ï¿½ï¿½Èºï¿½ï¿½Ð¡
+	final int maxGen = 1000; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	final float pc = 0.9f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	final float pm = 0.2f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	final float gapp = 0.8f; // Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	int[][] pop = new int[popsize][citysNum]; // ï¿½ï¿½Èº
+	float[] values = new float[popsize]; // ï¿½ï¿½ÈºÄ¿ï¿½êº¯ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸Â·ï¿½ß¾ï¿½ï¿½ë£©
+	mymath mathFun = new mymath();
 	Random rand = new Random();
-	
+
 	public int[] createInd(int citysNum) {
-		// Ëæ»ú²úÉú¸öÌå
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		int[] ind = new int[citysNum];
-		
-		for(int k = 0; k < citysNum; k++) {
+
+		for (int k = 0; k < citysNum; k++) {
 			ind[k] = k;
 		}
-		
-		for(int i = 0; i < citysNum; i++) {
-			int num = i+rand.nextInt(citysNum-i);
+
+		for (int i = 0; i < citysNum; i++) {
+			int num = i + rand.nextInt(citysNum - i);
 			int tmp;
 			tmp = ind[num];
 			ind[num] = ind[i];
 			ind[i] = tmp;
 		}
-		
+
 		return ind;
 	}
-	
-	public int[][] createPop(){
-		// ´´½¨ÖÖÈº
-		for(int i = 0; i < popsize; i++) {
+
+	public int[][] createPop() {
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èº
+		for (int i = 0; i < popsize; i++) {
 			pop[i] = createInd(citysNum).clone();
 		}
-		
+
 		return pop;
 	}
-	
+
 	public float[] fitness(float[] val) {
-		// ÊÊÓ¦¶È·ÖÅä
+		// ï¿½ï¿½Ó¦ï¿½È·ï¿½ï¿½ï¿½
 		float valSum = mathFun.sumfloat(val);
 		float[] fits = new float[val.length];
-		
-		for(int i = 0;i < val.length; i++) {
-			fits[i] = val[i]/valSum;
+
+		for (int i = 0; i < val.length; i++) {
+			fits[i] = val[i] / valSum;
 		}
-		
+
 		return fits;
 	}
-	
-	public int[][] select(int[][] pop,float[] fits){
-		// Ñ¡Ôñ²Ù×÷
-		int sonNum = (int)(gapp*pop.length);
+
+	public int[][] select(int[][] pop, float[] fits) {
+		// Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½
+		int sonNum = (int) (gapp * pop.length);
 		int[][] chrome = new int[sonNum][citysNum];
 		float[] indRate = mathFun.comsumFloat(fits);
-		
-		for(int i = 0; i < sonNum; i++) {
+
+		for (int i = 0; i < sonNum; i++) {
 			float rate = rand.nextFloat();
-			
-			for(int j = 0; j < pop.length; j++) {
+
+			for (int j = 0; j < pop.length; j++) {
 				if (rate <= indRate[j]) {
 					chrome[i] = pop[j].clone();
 					break;
 				}
 			}
-			
+
 		}
-		
+
 		return chrome;
 	}
-	
-	public int[][] crossover(int[][] pop){
-		// ½»²æ²Ù×÷
+
+	public int[][] crossover(int[][] pop) {
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		int[] index = createInd(pop.length);
-		
-		for(int i = 0; i < pop.length-1;i += 2) {
+
+		for (int i = 0; i < pop.length - 1; i += 2) {
 			float rate = rand.nextFloat();
-			
+
 			if (rate < pc) {
 				int[] ind1 = pop[index[i]].clone();
-				int[] ind2 = pop[index[i+1]].clone();
-//				System.out.println(Arrays.toString(ind1));
-//				System.out.println(Arrays.toString(ind2));
+				int[] ind2 = pop[index[i + 1]].clone();
+				// System.out.println(Arrays.toString(ind1));
+				// System.out.println(Arrays.toString(ind2));
 				int r1 = rand.nextInt(citysNum);
 				int r2 = rand.nextInt(citysNum);
-				
+
 				while (r1 > r2) {
 					int temp = r1;
 					r1 = r2;
 					r2 = temp;
 				}
-				
-				for(int j = r1; j < r2; j++) {
+
+				for (int j = r1; j < r2; j++) {
 					int[] a = ind1.clone();
 					int[] b = ind2.clone();
 					int gen1 = a[j];
 					int gen2 = b[j];
 					ind2[j] = gen1;
 					ind1[j] = gen2;
-					
+
 					for (int k = 0; k < citysNum; k++) {
-						
-						if(ind1[k] == gen2 && k != j) {
+
+						if (ind1[k] == gen2 && k != j) {
 							ind1[k] = gen1;
 							break;
 						}
-						
+
 					}
-					
+
 					for (int k = 0; k < citysNum; k++) {
-						
-						if(ind2[k] == gen1 && k != j) {
+
+						if (ind2[k] == gen1 && k != j) {
 							ind2[k] = gen2;
 							break;
 						}
 					}
-					
+
 				}
-//				System.out.println(Arrays.toString(ind1));
-//				System.out.println(Arrays.toString(ind2));
+				// System.out.println(Arrays.toString(ind1));
+				// System.out.println(Arrays.toString(ind2));
 				pop[index[i]] = ind1.clone();
-				pop[index[i+1]] = ind2.clone();
+				pop[index[i + 1]] = ind2.clone();
 			}
 		}
-		
+
 		return pop;
-		
+
 	}
-	
-	public int[][] mutate1(int[][] pop){
-		// ±äÒì²Ù×÷
-		for(int i = 0;i < pop.length;i++) {
+
+	public int[][] mutate1(int[][] pop) {
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		for (int i = 0; i < pop.length; i++) {
 			float rate = rand.nextFloat();
-			
-			if (rate < pm){
+
+			if (rate < pm) {
 				int[] ind3 = pop[i].clone();
-//				System.out.println(Arrays.toString(ind3));
+				// System.out.println(Arrays.toString(ind3));
 				int r1 = rand.nextInt(citysNum);
 				int r2 = rand.nextInt(citysNum);
-				
+
 				while (r1 == r2) {
 					r2 = rand.nextInt(citysNum);
 				}
-				
+
 				int tmp;
 				tmp = ind3[r1];
 				ind3[r1] = ind3[r2];
 				ind3[r2] = tmp;
-//				System.out.println(Arrays.toString(ind3));
-				
+				// System.out.println(Arrays.toString(ind3));
+
 				pop[i] = ind3.clone();
-				
+
 			}
 		}
 		return pop;
 	}
-	
-	public int[][] mutate2(int[][] pop){
-		// ±äÒì²Ù×÷
-		for(int i = 0; i < pop.length; i++) {
+
+	public int[][] mutate2(int[][] pop) {
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		for (int i = 0; i < pop.length; i++) {
 			float rate = 0.0f;
-			
-			if (rate < pm){
+
+			if (rate < pm) {
 				int[] ind3 = pop[i].clone();
 				int[] ind4 = ind3.clone();
 				float dis1 = calDistance(ind4);
-//				System.out.println(Arrays.toString(ind3));
+				// System.out.println(Arrays.toString(ind3));
 				int r1 = rand.nextInt(citysNum);
 				int r2 = rand.nextInt(citysNum);
-				
+
 				while (r1 > r2) {
 					int temp = r1;
 					r1 = r2;
 					r2 = temp;
 				}
-				
-				while(r1 < r2) {
+
+				while (r1 < r2) {
 					int temp;
 					temp = ind3[r1];
 					ind3[r1] = ind3[r2];
@@ -188,45 +190,45 @@ public class Ga extends TspData{
 					r1++;
 					r2--;
 				}
-//				System.out.println(Arrays.toString(ind3));
+				// System.out.println(Arrays.toString(ind3));
 				float dis2 = calDistance(ind3);
-				
-				if (dis1 < dis2 ) {
+
+				if (dis1 < dis2) {
 					pop[i] = ind4.clone();
-				}else {
+				} else {
 					pop[i] = ind3.clone();
 				}
-				
+
 			}
 		}
 		return pop;
 	}
-	
-	public int[][] reins(int[][] chrome,int[][] pop,float[] values){
-		// »ùÒòÖØ×é
+
+	public int[][] reins(int[][] chrome, int[][] pop, float[] values) {
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		int[][] sonPop = new int[popsize][citysNum];
 		int[] index = mathFun.indexSort(values);
-		
-		for(int i=0; i < popsize; i++) {
-			if(i < chrome.length) {
+
+		for (int i = 0; i < popsize; i++) {
+			if (i < chrome.length) {
 				sonPop[i] = chrome[i].clone();
-			}else {
-				sonPop[i] = pop[index[i-chrome.length]].clone();
+			} else {
+				sonPop[i] = pop[index[i - chrome.length]].clone();
 			}
 		}
-		
+
 		return sonPop;
 	}
-	
+
 	public int getBest(float[] values) {
-		// Ñ°ÕÒ×îÓÅ¸öÌåÏÂ±ê
+		// Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½Â±ï¿½
 		int[] index = mathFun.indexSort(values);
 		int bestIndex = index[0];
 		return bestIndex;
 	}
-	
+
 	public static void main(String[] args) {
-		
+
 		Ga GaTsp = new Ga();
 		int[][] pop = GaTsp.createPop();
 		float[] values = GaTsp.decodePop(pop);
@@ -235,8 +237,8 @@ public class Ga extends TspData{
 		float bestDis = values[bestIndex];
 		int[] bestInd = pop[bestIndex].clone();
 		float[] bestResult = new float[GaTsp.maxGen];
-		
-		for(int gen = 0; gen < GaTsp.maxGen; gen++) {
+
+		for (int gen = 0; gen < GaTsp.maxGen; gen++) {
 			float[] fits = GaTsp.fitness(values.clone());
 			int[][] chrome = GaTsp.select(pop, fits);
 			chrome = GaTsp.crossover(chrome.clone());
@@ -245,22 +247,22 @@ public class Ga extends TspData{
 			pop = GaTsp.reins(chrome.clone(), pop.clone(), values.clone());
 			values = GaTsp.decodePop(pop.clone());
 			valuesCopy = values.clone();
-			bestIndex =  GaTsp.getBest( valuesCopy);
+			bestIndex = GaTsp.getBest(valuesCopy);
 			float dis = values[bestIndex];
-			
+
 			if (dis < bestDis) {
 				bestDis = dis;
 				bestInd = pop[bestIndex].clone();
 			}
-			
+
 			bestResult[gen] = bestDis;
 		}
-		
+
 		System.out.println(bestDis);
 		System.out.println(Arrays.toString(bestInd));
-	
-//		System.out.println(Arrays.toString(bestResult));
-		
+
+		// System.out.println(Arrays.toString(bestResult));
+
 	}
-	
+
 }

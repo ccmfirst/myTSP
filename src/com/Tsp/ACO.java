@@ -6,161 +6,161 @@ import java.util.Random;
 import com.myfun.mymath;
 
 public class ACO extends TspData {
-	
-	final int popsize = 50;		  	// ÖÖÈº´óÐ¡
-	final int maxGen = 200;			// ×î´óµü´ú´ÎÊý
-	final float alpha = 1.0f;		// ÐÅÏ¢ËØÖØÒª³Ì¶ÈÒò×Ó
-	final float beta = 5.0f;		// Æô·¢º¯ÊýÖØÒª³Ì¶ÈÒò×Ó
-	final float rho = 0.1f;			// ÐÅÏ¢ËØ»Ó·¢Òò×Ó
-	final float q = 1.0f;			// ³£ÏµÊý
-	float[][] eta = new float[citysNum][citysNum];					// Æô·¢º¯Êý
-	float[][] Tau = new float[citysNum][citysNum];					// ÐÅÏ¢ËØ¾ØÕó
-	int[][] Table = new int[popsize][citysNum];						// Â·¾¶¼ÇÂ¼±í
-	int[][] routeBest = new int[maxGen][citysNum];					// ¸÷´ú×î¼ÑÂ·¾¶
-	float[] lengthBest = new float[maxGen];		// ¸÷´ú×î¼ÑÂ·¾¶µÄ³¤¶È
-	float[] lengthAve = new float[maxGen];		// ¸÷´úÂ·¾¶µÄÆ½¾ù³¤¶È
-	mymath myMath = new mymath();				
+
+	final int popsize = 50; // ï¿½ï¿½Èºï¿½ï¿½Ð¡
+	final int maxGen = 200; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	final float alpha = 1.0f; // ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Òªï¿½Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½
+	final float beta = 5.0f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½
+	final float rho = 0.1f; // ï¿½ï¿½Ï¢ï¿½Ø»Ó·ï¿½ï¿½ï¿½ï¿½ï¿½
+	final float q = 1.0f; // ï¿½ï¿½Ïµï¿½ï¿½
+	float[][] eta = new float[citysNum][citysNum]; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	float[][] Tau = new float[citysNum][citysNum]; // ï¿½ï¿½Ï¢ï¿½Ø¾ï¿½ï¿½ï¿½
+	int[][] Table = new int[popsize][citysNum]; // Â·ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½
+	int[][] routeBest = new int[maxGen][citysNum]; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+	float[] lengthBest = new float[maxGen]; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½
+	float[] lengthAve = new float[maxGen]; // ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	mymath myMath = new mymath();
 	Random rand = new Random();
-	
+
 	public void create_eta_Tau(int citysNum) {
-		for(int i = 0; i < citysNum; i++) {
-			for(int j=0;j<citysNum;j++) {
+		for (int i = 0; i < citysNum; i++) {
+			for (int j = 0; j < citysNum; j++) {
 				Tau[i][j] = 1.0f;
-				if(i!=j) {
-					eta[i][j] = 1/disMap[i][j];		
-				}else {	
+				if (i != j) {
+					eta[i][j] = 1 / disMap[i][j];
+				} else {
 					eta[i][j] = 0.0001f;
 				}
 			}
 		}
 	}
-	
+
 	public void solveTsp() {
 		create_eta_Tau(citysNum);
-		for(int gen = 0; gen < maxGen; gen++) {
+		for (int gen = 0; gen < maxGen; gen++) {
 			int[] start = new int[popsize];
-			
-			for(int i = 0; i < popsize; i++) {
+
+			for (int i = 0; i < popsize; i++) {
 				start[i] = rand.nextInt(citysNum);
 				Table[i][0] = start[i];
 			}
-			
+
 			int[] citys_index = new int[citysNum];
-			
-			for(int i = 0; i < citysNum; i++) {
+
+			for (int i = 0; i < citysNum; i++) {
 				citys_index[i] = i;
 			}
-			
-			for(int i = 0; i< popsize;i++) {
+
+			for (int i = 0; i < popsize; i++) {
 				for (int j = 1; j < citysNum; j++) {
-					
-					int[] tabu = new int[j];		
-					tabu = Arrays.copyOf(Table[i], j);		// ÒÑ¾­·ÃÎÊ¹ýµÄ³ÇÊÐ
-					int[] allow_index = myMath.noismember(citys_index,tabu);		
+
+					int[] tabu = new int[j];
+					tabu = Arrays.copyOf(Table[i], j); // ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½Ä³ï¿½ï¿½ï¿½
+					int[] allow_index = myMath.noismember(citys_index, tabu);
 					int[] allow = new int[allow_index.length];
-					
-					for(int k = 0;k < allow.length; k++) {
+
+					for (int k = 0; k < allow.length; k++) {
 						allow[k] = citys_index[allow_index[k]];
-					}										// ´ý·ÃÎÊ³ÇÊÐ
-					
-					// ¼ÆËã×ªÒÆ³ÇÊÐµÄ¸ÅÂÊ
+					} // ï¿½ï¿½ï¿½ï¿½ï¿½Ê³ï¿½ï¿½ï¿½
+
+					// ï¿½ï¿½ï¿½ï¿½×ªï¿½Æ³ï¿½ï¿½ÐµÄ¸ï¿½ï¿½ï¿½
 					float[] P = new float[allow.length];
-					
-					for(int k = 0; k < allow.length; k++) {
-						P[k] = (float)(Math.pow(Tau[tabu[tabu.length-1]][allow[k]],alpha)
-								*Math.pow(eta[tabu[tabu.length-1]][allow[k]],beta));
+
+					for (int k = 0; k < allow.length; k++) {
+						P[k] = (float) (Math.pow(Tau[tabu[tabu.length - 1]][allow[k]], alpha)
+								* Math.pow(eta[tabu[tabu.length - 1]][allow[k]], beta));
 					}
-					
-					// ÂÖÅÌ¶ÄÑ¡ÔñÏÂÒ»¸ö³ÇÊÐ
+
+					// ï¿½ï¿½ï¿½Ì¶ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					float sumP = myMath.sumfloat(P);
-					
-					for(int k = 0; k < P.length; k++) {
+
+					for (int k = 0; k < P.length; k++) {
 						P[k] /= sumP;
 					}
-					
+
 					float[] Pc = myMath.comsumFloat(P);
 					float rate = rand.nextFloat();
-					int target = 0; 
-					
-					for(int k = 0; k < Pc.length; k++) {
-						
-						if(rate <= Pc[k]) {
-							target = allow[k];			// ÏÂÒ»¸ö³ÇÊÐ
+					int target = 0;
+
+					for (int k = 0; k < Pc.length; k++) {
+
+						if (rate <= Pc[k]) {
+							target = allow[k]; // ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							break;
 						}
-						
+
 					}
-					
-					Table[i][j] = target;				// ¼ÇÂ¼µÚi¸öÂìÒÏ·ÃÎÊµÄµÚj¸ö³ÇÊÐ
+
+					Table[i][j] = target; // ï¿½ï¿½Â¼ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ÊµÄµï¿½jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				}
 			}
-			
+
 			float[] length = new float[popsize];
-			
-			for(int i = 0; i < popsize; i++) {
-				length[i] = calDistance(Table[i]);		// ¼ÆËãÃ¿Ö»ÂìÒÏËùÐÐÊ¹µÄ¾àÀë
+
+			for (int i = 0; i < popsize; i++) {
+				length[i] = calDistance(Table[i]); // ï¿½ï¿½ï¿½ï¿½Ã¿Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ä¾ï¿½ï¿½ï¿½
 			}
-			
+
 			float[] lengthCopy = length.clone();
-			
-			// ¼ÇÂ¼µÚgen´Îµü´úÖÐµÄ×î¶ÌÂ·Ïß£¬×î¶Ì¾àÀë£¬Æ½¾ù¾àÀë
-			if(gen==0) {
+
+			// ï¿½ï¿½Â¼ï¿½ï¿½genï¿½Îµï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½Â·ï¿½ß£ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ë£¬Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			if (gen == 0) {
 				int[] index = myMath.indexSort(lengthCopy);
 				int min_index = index[0];
 				float minLength = length[min_index];
-				lengthBest[gen] = minLength;			
-				lengthAve[gen] = myMath.sumfloat(length)/popsize;
+				lengthBest[gen] = minLength;
+				lengthAve[gen] = myMath.sumfloat(length) / popsize;
 				routeBest[gen] = Table[min_index];
-			}else {
+			} else {
 				int[] index = myMath.indexSort(lengthCopy);
 				int min_index = index[0];
 				float minLength = length[min_index];
-				lengthAve[gen] = myMath.sumfloat(length)/popsize;
-				
-				if(minLength <= lengthBest[gen-1]) {
+				lengthAve[gen] = myMath.sumfloat(length) / popsize;
+
+				if (minLength <= lengthBest[gen - 1]) {
 					lengthBest[gen] = minLength;
 					routeBest[gen] = Table[min_index];
-				}else {
-					lengthBest[gen] = lengthBest[gen-1];
-					routeBest[gen] = routeBest[gen-1];
+				} else {
+					lengthBest[gen] = lengthBest[gen - 1];
+					routeBest[gen] = routeBest[gen - 1];
 				}
-				
+
 			}
-			
-			// ¸üÐÂÐÅÏ¢ËØ
+
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
 			float[][] deltaTau = new float[citysNum][citysNum];
-			
-			for(int i = 0; i < popsize; i++) {
-				
-				for(int j = 0; j < citysNum-1; j++) {
-					deltaTau[Table[i][j]][Table[i][j+1]] += (q/length[i]);
+
+			for (int i = 0; i < popsize; i++) {
+
+				for (int j = 0; j < citysNum - 1; j++) {
+					deltaTau[Table[i][j]][Table[i][j + 1]] += (q / length[i]);
 				}
-				
-				deltaTau[Table[i][citysNum-1]][Table[i][0]] += (q/length[i]);
-				
+
+				deltaTau[Table[i][citysNum - 1]][Table[i][0]] += (q / length[i]);
+
 			}
-			
-			for(int i = 0; i < citysNum; i++) {
-				
-				for(int j = 0; j < citysNum; j++) {
-					Tau[i][j] = (1-rho)*Tau[i][j] + deltaTau[i][j];
+
+			for (int i = 0; i < citysNum; i++) {
+
+				for (int j = 0; j < citysNum; j++) {
+					Tau[i][j] = (1 - rho) * Tau[i][j] + deltaTau[i][j];
 				}
-				
+
 			}
-			
+
 			Table = new int[popsize][citysNum];
 		}
-		
-		System.out.println(lengthBest[maxGen-1]);						// ´òÓ¡È«¾Ö×î¶Ì¾àÀë
-		System.out.println(Arrays.toString(lengthBest));				// ´òÓ¡¸÷´ú×î¶Ì¾àÀë
-		System.out.println(Arrays.toString(lengthAve));					// ´òÓ¡¸÷´úÆ½¾ù¾àÀë
-		System.out.println(Arrays.toString(routeBest[maxGen-1]));		// ´òÓ¡×î¶ÌÂ·Ïß
-		
+
+		System.out.println(lengthBest[maxGen - 1]); // ï¿½ï¿½Ó¡È«ï¿½ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½
+		System.out.println(Arrays.toString(lengthBest)); // ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½
+		System.out.println(Arrays.toString(lengthAve)); // ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		System.out.println(Arrays.toString(routeBest[maxGen - 1])); // ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+
 	}
 
-	public static void main(String[] args) {                                                                                                                                       
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ACO acoTsp = new ACO();	
+		ACO acoTsp = new ACO();
 		acoTsp.solveTsp();
 	}
 }
